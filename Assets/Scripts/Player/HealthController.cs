@@ -3,7 +3,11 @@
 public class HealthController : MonoBehaviour, IDamageable
 {
     [SerializeField] private int _currentHealth;
-
+    private Player _player;
+    private void Start()
+    {
+        _player = GetComponent<Player>();
+    }
     public void TakeDamage(int amount)
     {
         _currentHealth -= amount;
@@ -15,6 +19,6 @@ public class HealthController : MonoBehaviour, IDamageable
 
     private void Die()
     {
-        Debug.Log("Muerto");
+        _player.OnDeath();
     }
 }

@@ -10,12 +10,20 @@ public class Obstacle : MonoBehaviour
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody2D>();
+        ScoreSystem.OnSpeedSpawnObstacle += ModifySpeed;
     }
-
+    private void OnDestroy()
+    {
+        ScoreSystem.OnSpeedSpawnObstacle -= ModifySpeed;
+    }
     // Update is called once per frame
     void FixedUpdate()
     {
         _rigidbody.velocity = Vector2.left * _speed;
+    }
+    public void ModifySpeed()
+    {
+        _speed += 0.5f;
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -24,6 +32,7 @@ public class Obstacle : MonoBehaviour
             if(collision.TryGetComponent<IDamageable>(out var damageable))
             {
                 damageable.TakeDamage(1);
+                ServiceLocator.Instance.GetService<SoundSystem>().PlaySound(0);
             }
             Destroy(gameObject);
         }
